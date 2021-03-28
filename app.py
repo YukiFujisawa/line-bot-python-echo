@@ -69,8 +69,9 @@ def callback():
 def message_text(event):
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=request_google(text))
+        TextSendMessage(text=request_google(event.message.text))
     )
+
 
 def request_google(text):
     # [START language_quickstart]
@@ -98,10 +99,10 @@ def request_google(text):
     print(response.sentences)
 
     print("Text: {}".format(text))
-    print("Sentiment: \n sentiment.score:{}, \n sentiment.magnitude:{}".format(sentiment.score, sentiment.magnitude))
+    print("Sentiment: \n sentiment.score:{}, \n sentiment.magnitude:{}".format(
+        sentiment.score, sentiment.magnitude))
     return "Sentiment: \n sentiment.score:{}, \n sentiment.magnitude:{}".format(sentiment.score, sentiment.magnitude)
     # [END language_quickstart]
-
 
 
 if __name__ == "__main__":
