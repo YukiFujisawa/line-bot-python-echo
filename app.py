@@ -27,6 +27,10 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
 
+from dotenv import load_dotenv
+
+load_dotenv(verbose=True)
+
 app = Flask(__name__)
 
 # get channel_secret and channel_access_token from your environment variable
@@ -65,8 +69,39 @@ def callback():
 def message_text(event):
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text)
+        TextSendMessage(text=request_google(text))
     )
+
+def request_google(text):
+    # [START language_quickstart]
+    # Imports the Google Cloud client library
+    # [START language_python_migration_imports]
+    from google.cloud import language_v1
+
+    # [END language_python_migration_imports]
+
+    # Instantiates a client
+    # [START language_python_migration_client]
+    client = language_v1.LanguageServiceClient()
+    # [END language_python_migration_client]
+    # text = u"全体としては面白かったです。ただ、あんなに強かったラスボスを倒す流れが謎すぎました。個人的に映画はラスト重視なので、この終わり方はちょっとなぁ。"
+    document = language_v1.types.Document(
+        content=text,
+        type='PLAIN_TEXT',
+    )
+    response = client.analyze_sentiment(
+        document=document,
+        encoding_type='UTF8',
+    )
+    sentiment = response.document_sentiment
+
+    print(response.sentences)
+
+    print("Text: {}".format(text))
+    print("Sentiment: \n sentiment.score:{}, \n sentiment.magnitude:{}".format(sentiment.score, sentiment.magnitude))
+    return "Sentiment: \n sentiment.score:{}, \n sentiment.magnitude:{}".format(sentiment.score, sentiment.magnitude)
+    # [END language_quickstart]
+
 
 
 if __name__ == "__main__":
