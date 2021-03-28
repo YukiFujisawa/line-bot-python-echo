@@ -85,14 +85,14 @@ def request_google(text):
     # [START language_python_migration_client]
     client = language_v1.LanguageServiceClient()
     # [END language_python_migration_client]
-    # text = u"全体としては面白かったです。ただ、あんなに強かったラスボスを倒す流れが謎すぎました。個人的に映画はラスト重視なので、この終わり方はちょっとなぁ。"
+
     document = language_v1.types.Document(
         content=text,
         type_='PLAIN_TEXT',
     )
 
     sentiment = client.analyze_sentiment(
-        request={'document': document, 'encoding_type': 'UTF8'}).document_sentiment
+        request={'document': document, 'encoding_type': 'UTF-8'}).document_sentiment
 
     print("Text: {}".format(text))
     print("Sentiment: \n sentiment.score:{}, \n sentiment.magnitude:{}".format(
