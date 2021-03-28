@@ -88,15 +88,11 @@ def request_google(text):
     # text = u"全体としては面白かったです。ただ、あんなに強かったラスボスを倒す流れが謎すぎました。個人的に映画はラスト重視なので、この終わり方はちょっとなぁ。"
     document = language_v1.types.Document(
         content=text,
-        type='PLAIN_TEXT',
+        type_='PLAIN_TEXT',
     )
-    response = client.analyze_sentiment(
-        document=document,
-        encoding_type='UTF8',
-    )
-    sentiment = response.document_sentiment
 
-    print(response.sentences)
+    sentiment = client.analyze_sentiment(
+        request={'document': document, 'encoding_type': 'UTF8'}).document_sentiment
 
     print("Text: {}".format(text))
     print("Sentiment: \n sentiment.score:{}, \n sentiment.magnitude:{}".format(
